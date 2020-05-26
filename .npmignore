@@ -1,3 +1,7 @@
 /node_modules/
 .idea/
 /tests/
+index.js
+jest.config.jon
+.babelrc
+webpack.config.js
