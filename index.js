@@ -252,3 +252,16 @@ export function method(params, returnType) {
         };
     }
 }
+
+export default {
+    string,
+    int,
+    unsigned,
+    number,
+    method,
+    float,
+    boolean,
+    array,
+    readonly,
+    CheckType
+}

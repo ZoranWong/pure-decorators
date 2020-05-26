@@ -1,4 +1,6 @@
 import {string} from "../index";
+import * as obj from '../index';
+console.log(obj);
 
 class Test {
     @string
