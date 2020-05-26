@@ -1,6 +1,6 @@
 {
   "name": "@zoranwong/pure-decorators",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Javascript decorator for method and property, make js code strong",
   "main": "index.js",
   "scripts": {
