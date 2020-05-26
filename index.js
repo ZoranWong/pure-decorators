@@ -133,7 +133,8 @@ function typeOf(value) {
 function check(cType, type) {
     let compatibleNumberToFloat = ((cType === 'int' || cType === 'unsigned') && type === 'float');
     let compatibleUnsignedToInt = (cType === 'unsigned' && type === 'int');
-    if (!(cType === type || compatibleNumberToFloat || compatibleUnsignedToInt)) {
+    let compatibleNumber = (['int', 'unsigned', 'float'].indexOf(cType) > -1) && type === 'number';
+    if (!(cType === type || compatibleNumberToFloat || compatibleUnsignedToInt || compatibleNumber)) {
         return false;
     }
     return true;
