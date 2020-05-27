@@ -1,8 +1,9 @@
-import {number} from "../index";
+import {CheckType, number} from "../index";
 
 class Test {
     @number
     a = '';
+    static instance = null;
 }
 
 function testString(b) {

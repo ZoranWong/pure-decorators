@@ -217,7 +217,11 @@ export function readonly(target, name, descriptor) {
     return descriptor;
 }
 
-export function CheckType(type) {
+export function any(target, name, descriptor) {
+    return true;
+}
+
+export function CheckType(type) {ß
     return (target, name, descriptor) => {
         return typeCheck(type, target, name, descriptor);
     }
