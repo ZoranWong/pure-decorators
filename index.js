@@ -8,9 +8,18 @@ function isBaseType(val) {
     return false;
 }
 
-function paramTypeCheck(value, index, type) {
+function paramTypeCheck(value, index, type, ext) {
     let cType = typeOf(value);
     if (typeOf(type) === 'string') {
+        switch (type) {
+            case 'Enum':
+                if(ext.indexOf(value) > -1){
+                    return  true;
+                }else{
+                    throw new TypeError(`the property ${name} is a enum type  value, can't set a value not in the enum set`);
+                }
+                break;
+        }
         if (check(cType, type)) {
             return true;
         } else {
@@ -30,9 +39,18 @@ function paramTypeCheck(value, index, type) {
     }
 }
 
-function returnTypeCheck(value, type) {
+function returnTypeCheck(value, type, ext) {
     let cType = typeOf(value);
     if (typeOf(type) === 'string') {
+        switch (type) {
+            case 'Enum':
+                if(ext.indexOf(value) > -1){
+                    return  true;
+                }else{
+                    throw new TypeError(`the property ${name} is a enum type  value, can't set a value not in the enum set`);
+                }
+                break;
+        }
         if (check(cType, type)) {
             return true;
         } else {
@@ -52,9 +70,18 @@ function returnTypeCheck(value, type) {
     }
 }
 
-function setPropertyTypeCheck(target, name, type) {
+function setPropertyTypeCheck(target, name, type, ext) {
     let cType = typeOf(target);
     if (typeOf(type) === 'string') {
+        switch (type) {
+            case 'Enum':
+                if(ext.indexOf(target) > -1){
+                    return  true;
+                }else{
+                    throw new TypeError(`the property ${name} is a enum type  value, can't set a value not in the enum set`);
+                }
+                break;
+        }
         if (check(cType, type)) {
             return true;
         } else {
@@ -78,9 +105,10 @@ function setPropertyTypeCheck(target, name, type) {
  * @param {string} type
  * @param {string} name
  * @param {Descriptor} descriptor
+ * @param {any} ext
  * @return {any}
  * */
-function propertyTypeCheck(type, name, descriptor) {
+function propertyTypeCheck(type, name, descriptor, ext) {
     let v = descriptor.initializer && descriptor.initializer.call(this);
     return {
         enumerable: true,
@@ -89,7 +117,7 @@ function propertyTypeCheck(type, name, descriptor) {
             return v;
         },
         set: function (c) {
-            if (setPropertyTypeCheck(c, name, type)) {
+            if (setPropertyTypeCheck(c, name, type, ext)) {
                 v = c;
             }
         }
@@ -108,13 +136,13 @@ class Descriptor {
  * @param {Descriptor|null} descriptor
  * @return {any}
  * */
-function typeCheck(type, target, name, descriptor = null) {
+function typeCheck(type, target, name, descriptor = null, ext = null) {
     if (descriptor) {
-        return propertyTypeCheck(type, name, descriptor);
+        return propertyTypeCheck(type, name, descriptor, ext);
     } else if (name) {
-        return paramTypeCheck(target, name, type);
+        return paramTypeCheck(target, name, type, ext);
     } else {
-        return returnTypeCheck(target, type);
+        return returnTypeCheck(target, type, ext);
     }
 }
 
@@ -193,22 +221,8 @@ export function boolean(target, name, descriptor) {
  * @return {function(*, *, *)}
  * */
 export function Enum(data) {
-    return function (target, name, descriptor) {
-        let v = descriptor.initializer && descriptor.initializer.call(this);
-        return {
-            enumerable: true,
-            configurable: true,
-            get: function () {
-                return v;
-            },
-            set: function (c) {
-                if (data.indexOf(c) > -1) {
-                    v = c;
-                } else {
-
-                }
-            }
-        }
+    return function(target, name, descriptor) {
+        return typeCheck('Enum', target, name, descriptor, data);
     }
 }
 
