@@ -64,7 +64,7 @@ class Test {
 - @ArrowFunction [declare an arrow function property] 
 - @array [declare an array property ]
 - @boolean [declare a boolean property ]
-- @Enum([MALE, FEMALE]) [declare a enum value property] 
+- @Enum([val1, val2, ...]) [declare a enum value property] 
 - @Constructor [declare a constructor property] 
 - @Constructor(cls) [declare a designated class (cls) constructor property] 
 - @readonly [declare a readonly property]
