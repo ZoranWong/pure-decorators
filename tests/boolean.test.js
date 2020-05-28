@@ -17,6 +17,7 @@ function testBoolean(x){
         return  false;
     }
 }
+
 test('test return boolean type!!', function () {
     expect(testBoolean(true)).toEqual(true);
 });
