@@ -10,10 +10,11 @@ class Test {
 
 function testBoolean(x){
     try{
-        let test = new Test()
-        test.returnBoolean(x)
+        let test = new Test();
+        test.returnBoolean(x);
         return true;
     }catch (e) {
+        console.log(e);
         return  false;
     }
 }
@@ -23,7 +24,7 @@ test('test return boolean type!!', function () {
 });
 function testProperty(x){
     try{
-        let test = new Test()
+        let test = new Test();
         test.isBool = x;
         return true;
     }catch (e) {

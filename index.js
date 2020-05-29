@@ -93,24 +93,28 @@ function paramTypeCheck(value, index, type, ext) {
                 } else {
                     throw new TypeError(`the parameters[${index}] ${name} is a enum type  value, can't set a value not in the enum set`);
                 }
+                break;
             case 'function':
                 if (isFunction(value)) {
                     return true;
                 } else {
                     throw new TypeError(`the parameters[${index}] ${name} is a function`);
                 }
+                break;
             case 'ArrowFunction':
                 if (isArrowFun(value)) {
                     return true;
                 } else {
                     throw new TypeError(`the parameters[${index}] ${name} is a arrow function`);
                 }
+                break;
             case 'Constructor':
                 if (isClass(value) && (!ext || value === ext)) {
                     return true;
                 } else {
                     throw new TypeError(`the parameters[${index}] ${name} is a class`);
                 }
+                break;
         }
         if (check(cType, type)) {
             return true;
@@ -141,24 +145,28 @@ function returnTypeCheck(value, type, ext) {
                 } else {
                     throw new TypeError(`the return value  ${name} is a enum type  value, can't set a value not in the enum set`);
                 }
+                break;
             case 'function':
                 if (isFunction(value)) {
                     return true;
                 } else {
                     throw new TypeError(`the return value ${name} is a function`);
                 }
+                break;
             case 'ArrowFunction':
                 if (isArrowFun(value)) {
                     return true;
                 } else {
                     throw new TypeError(`the return value ${name} is a arrow function`);
                 }
+                break;
             case 'Constructor':
                 if (isClass(value) && (!ext || value === ext)) {
                     return true;
                 } else {
                     throw new TypeError(`the return value ${name} is a class`);
                 }
+                break;
         }
         if (check(cType, type)) {
             return true;
@@ -189,24 +197,28 @@ function setPropertyTypeCheck(target, name, type, ext) {
                 } else {
                     throw new TypeError(`the property ${name} is a enum type  value, can't set a value not in the enum set`);
                 }
+                break;
             case 'function':
                 if (isFunction(target)) {
                     return true;
                 } else {
                     throw new TypeError(`the property ${name} is a function`);
                 }
+                break;
             case 'ArrowFunction':
                 if (isArrowFun(target)) {
                     return true;
                 } else {
                     throw new TypeError(`the property ${name} is a arrow function`);
                 }
+                break;
             case 'Constructor':
                 if (isClass(target) && (!ext || target === ext)) {
                     return true;
                 } else {
                     throw new TypeError(`the property ${name} is a class`);
                 }
+                break;
         }
         if (check(cType, type)) {
             return true;
@@ -247,7 +259,7 @@ function propertyTypeCheck(type, name, descriptor, ext) {
                 v = c;
             }
         }
-    }
+    };
 }
 
 class Descriptor {
@@ -295,49 +307,49 @@ function check(cType, type) {
 }
 
 export function string(target, name = null, descriptor = null) {
-    return typeCheck('string', target, name, descriptor)
+    return typeCheck('string', target, name, descriptor);
 }
 
 export function number(target, name, descriptor = null) {
-    return typeCheck('number', target, name, descriptor)
+    return typeCheck('number', target, name, descriptor);
 }
 
 export function unsigned(target, name, descriptor) {
-    return typeCheck('unsigned', target, name, descriptor)
+    return typeCheck('unsigned', target, name, descriptor);
 }
 
 export function int(target, name, descriptor) {
-    return typeCheck('int', target, name, descriptor)
+    return typeCheck('int', target, name, descriptor);
 }
 
 export function array(target, name, descriptor) {
-    return typeCheck('array', target, name, descriptor)
+    return typeCheck('array', target, name, descriptor);
 }
 
 export function fun(target, name, descriptor) {
-    return typeCheck('function', target, name, descriptor)
+    return typeCheck('function', target, name, descriptor);
 }
 
 export function ArrowFunction(target, name, descriptor) {
-    return typeCheck('ArrowFunction', target, name, descriptor)
+    return typeCheck('ArrowFunction', target, name, descriptor);
 }
 
 export function Constructor(val = null, key = null, des = null) {
     if(!key){
         return (target, name, descriptor) => {
-            return typeCheck('Constructor', target, name, descriptor, val)
-        }
+            return typeCheck('Constructor', target, name, descriptor, val);
+        };
     }else{
-        return  typeCheck('Constructor', val, key, des)
+        return  typeCheck('Constructor', val, key, des);
     }
 }
 
 export function float(target, name, descriptor) {
-    return typeCheck('float', target, name, descriptor)
+    return typeCheck('float', target, name, descriptor);
 }
 
 export function boolean(target, name, descriptor) {
-    return typeCheck('boolean', target, name, descriptor)
+    return typeCheck('boolean', target, name, descriptor);
 }
 
 /**
@@ -347,7 +359,7 @@ export function boolean(target, name, descriptor) {
 export function Enum(data) {
     return function (target, name, descriptor) {
         return typeCheck('Enum', target, name, descriptor, data);
-    }
+    };
 }
 
 export function readonly(target, name, descriptor) {
@@ -362,7 +374,7 @@ export function any(target, name, descriptor) {
 export function CheckType(type) {
     return (target, name, descriptor) => {
         return typeCheck(type, target, name, descriptor);
-    }
+    };
 }
 
 /**
@@ -382,7 +394,7 @@ export function method(params, returnType) {
                     else
                         paramTypeCheck(arg[index], index, type);
                 }
-                let result = descriptor.value.apply(this, arg);
+                let result = descriptor.value.call(this, ...arg);
                 if (returnType) {
                     if (typeOf(returnType) === 'string')
                         returnTypeCheck(result, returnType);
@@ -392,5 +404,5 @@ export function method(params, returnType) {
                 return result;
             }
         };
-    }
+    };
 }
