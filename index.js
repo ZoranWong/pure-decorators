@@ -228,9 +228,9 @@ function setPropertyTypeCheck(target, name, type, ext) {
 }
 
 /**
- * @param {string} type
+ * @param {null} type
  * @param {string} name
- * @param {Descriptor} descriptor
+ * @param {PropertyDescriptor|Descriptor} descriptor
  * @param {any} ext
  * @return {any}
  * */
@@ -392,5 +392,19 @@ export function method(params, returnType) {
                 return result;
             }
         };
+    }
+}
+
+export function property(key, defaultVal = null, type = null) {
+    return function (target) {
+        let value = defaultVal;
+        Object.defineProperty(target.prototype, key, {
+            set(v) {
+                value = v;
+            },
+            get() {
+                return value;
+            }
+        })
     }
 }
