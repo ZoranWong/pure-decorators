@@ -71,3 +71,4 @@ class Test {
 - @any [Unlimited variable property] 
 - @CheckType(cls) [declare a designated class (cls) property]
 - @method(paramTypes, returnType) [designed method parameters type (paramTypes) and return type (returnType)]
+- @property(key, defaultVal, type) [add a property for your class which you declare]
