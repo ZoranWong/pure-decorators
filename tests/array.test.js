@@ -7,7 +7,6 @@ class ArrayTest {
 function setArr(x) {
     try {
         let test = new ArrayTest();
-        console.log('------------', test.unit = 1);
         test.arrow = x
         return true;
     }catch (e) {

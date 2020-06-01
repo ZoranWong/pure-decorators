@@ -268,7 +268,7 @@ class Descriptor {
 }
 
 /**
- * @param {string} type
+ * @param {string|null} type
  * @param {any} target
  * @param {string|int|null} name
  * @param {Descriptor|null} descriptor
@@ -410,13 +410,16 @@ export function method(params, returnType) {
 export function property(key, defaultVal = null, type = null) {
     return function (target) {
         let value = defaultVal;
-        Object.defineProperty(target.prototype, key, {
-            set(v) {
-                value = v;
-            },
-            get() {
-                return value;
-            }
-        })
+        let descriptor = {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+        };
+        if(typeof type === 'string'){
+            descriptor = typeCheck(type, this, key, descriptor);
+        }else{
+            descriptor = type(this, key, descriptor);
+        }
+        Object.defineProperty(target.prototype, key, descriptor)
     }
 }
