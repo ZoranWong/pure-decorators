@@ -83,7 +83,7 @@ function isArrowFun(cxs) {
     return false;
 }
 
-function paramTypeCheck(value, index, type, ext) {
+let paramTypeCheck = (value, index, type, ext) => {
     let cType = typeOf(value);
     if (typeOf(type) === 'string') {
         switch (type) {
@@ -135,7 +135,7 @@ function paramTypeCheck(value, index, type, ext) {
     }
 }
 
-function returnTypeCheck(value, type, ext) {
+let returnTypeCheck = (value, type, ext) => {
     let cType = typeOf(value);
     if (typeOf(type) === 'string') {
         switch (type) {
@@ -187,7 +187,8 @@ function returnTypeCheck(value, type, ext) {
     }
 }
 
-function setPropertyTypeCheck(target, name, type, ext) {
+let setPropertyTypeCheck = (target, name, type, ext) => {
+
     let cType = typeOf(target);
     if (typeOf(type) === 'string') {
         switch (type) {
@@ -246,17 +247,25 @@ function setPropertyTypeCheck(target, name, type, ext) {
  * @param {any} ext
  * @return {any}
  * */
-function propertyTypeCheck(type, name, descriptor, ext) {
-    let v = descriptor.initializer && descriptor.initializer.call(this);
+let propertyTypeCheck = (target, type, name, descriptor, ext) => {
     return {
         enumerable: true,
         configurable: true,
-        get: function () {
-            return v;
+        get() {
+            if (!this['decorators']) {
+                this.decorators = {};
+                let v = descriptor.initializer && descriptor.initializer.call(this);
+                return v;
+            }
+
+            return this.decorators[name];
         },
-        set: function (c) {
+        set(c) {
             if (setPropertyTypeCheck(c, name, type, ext)) {
-                v = c;
+                if (!this['decorators']) {
+                    this.decorators = {};
+                }
+                this.decorators[name] = c;
             }
         }
     };
@@ -274,9 +283,9 @@ class Descriptor {
  * @param {Descriptor|null} descriptor
  * @return {any}
  * */
-function typeCheck(type, target, name, descriptor = null, ext = null) {
+let typeCheck = (type, target, name, descriptor = null, ext = null) => {
     if (descriptor) {
-        return propertyTypeCheck(type, name, descriptor, ext);
+        return propertyTypeCheck(target, type, name, descriptor, ext);
     } else if (name) {
         return paramTypeCheck(target, name, type, ext);
     } else {
@@ -335,12 +344,12 @@ export function ArrowFunction(target, name, descriptor) {
 }
 
 export function Constructor(val = null, key = null, des = null) {
-    if(!key){
+    if (!key) {
         return (target, name, descriptor) => {
             return typeCheck('Constructor', target, name, descriptor, val);
         };
-    }else{
-        return  typeCheck('Constructor', val, key, des);
+    } else {
+        return typeCheck('Constructor', val, key, des);
     }
 }
 
@@ -357,7 +366,7 @@ export function boolean(target, name, descriptor) {
  * @return {function(*, *, *)}
  * */
 export function Enum(data) {
-    return function (target, name, descriptor) {
+    return (target, name, descriptor) => {
         return typeCheck('Enum', target, name, descriptor, data);
     };
 }
@@ -408,16 +417,16 @@ export function method(params, returnType) {
 }
 
 export function property(key, defaultVal = null, type = null) {
-    return function (target) {
+    return (target) => {
         let value = defaultVal;
         let descriptor = {
             enumerable: true,
             configurable: true,
             writable: true,
         };
-        if(typeof type === 'string'){
+        if (typeof type === 'string') {
             descriptor = typeCheck(type, this, key, descriptor);
-        }else{
+        } else {
             descriptor = type(this, key, descriptor);
         }
         Object.defineProperty(target.prototype, key, descriptor)
