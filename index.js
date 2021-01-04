@@ -1,4 +1,4 @@
-const BaseType = [Number, String, Boolean, Array, BigInt, Symbol, Function];
+const BaseType = [Number, String, Boolean, Array, Symbol, Function];
 
 function isBaseType(val) {
     for (let i in BaseType) {
@@ -418,7 +418,6 @@ export function method(params, returnType) {
 
 export function property(key, defaultVal = null, type = null) {
     return (target) => {
-        let value = defaultVal;
         let descriptor = {
             enumerable: true,
             configurable: true,

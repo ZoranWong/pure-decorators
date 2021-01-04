@@ -11,7 +11,7 @@ let t1 = new ArrayTest();
 let t2 = new ArrayTest();
 t1.p0 = 10;
 t1.n = 100;
-console.log(t1.n, t2.n);
+console.log(t1.n, t2.n, t1);
 
 function setArr(x) {
     try {
